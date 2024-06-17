@@ -252,7 +252,7 @@ Number keys <kbd>1</kbd>, <kbd>2</kbd>, …, <kbd>9</kbd>, <kbd>0</kbd> are used
 ### LF
 
 LF (List Files) is a terminal file manager that emphasizes speed and efficiency. Navigating, previewing, and managing files with LF is entirely keyboard-driven, streamlining file operations in your project workflow.
-![image-20240617195214282](/Users/peterhk/Desktop/Full-keyboard-environment/assets/image-20240617195214282.png)
+![image-20240617195214282](./assets/image-20240617195214282.png)
 
 ### Neovim
 
@@ -260,7 +260,7 @@ Neovim (NVim) extends Vim, providing a modern take on the classic text editor. W
 
 - Using Obsidian.nvim to take notes
 
-  ![image-20240617195308798](/Users/peterhk/Desktop/Full-keyboard-environment/assets/image-20240617195308798.png)
+  ![image-20240617195308798](./assets/image-20240617195308798.png)
 
 ### Script
 
@@ -271,9 +271,9 @@ export epubs into pdfs
 
 ### Sioyek
 
-Sioyek is a PDF viewer optimized for reading research papers and technical documentation. Its keyboard-centric design allows users to navigate documents, jump between sections, and annotate with minimal reliance on the mouse.![image-20240617195502756](/Users/peterhk/Desktop/Full-keyboard-environment/assets/image-20240617195502756.png)
+Sioyek is a PDF viewer optimized for reading research papers and technical documentation. Its keyboard-centric design allows users to navigate documents, jump between sections, and annotate with minimal reliance on the mouse.![image-20240617195502756](./assets/image-20240617195502756.png)
 
-![image-20240617195530061](/Users/peterhk/Desktop/Full-keyboard-environment/assets/image-20240617195530061.png)
+![image-20240617195530061](./assets/image-20240617195530061.png)
 
 ### Tmux
 
