@@ -1,0 +1,368 @@
+set shell zsh
+set sixel true
+set shellopts '-euy'
+set ifs "\n"
+set filesep "\n"  # default already
+set hidden true
+#set color256 ture
+set scrolloff 10
+#set dirfirst!
+set dirfirst false
+set drawbox
+set ratios 4:5
+set incsearch
+set sortby ctime
+set reverse
+# set ignorecase!
+set relativenumber
+#Some split words by zsh 
+set shell zsh
+set shellopts '-euy'
+set ifs "\n"
+# set filesep "\n"  # default already
+set scrolloff 10
+set icons true
+# follow ctpv as preview manager, install from brew 
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+&ctpvquit $id
+#set previewer stpv
+#set cleaner stpvimgclr
+#&stpvimg --listen $id
+#cmd on-quit $stpvimg --end $id
+#set cleaner ~/.config/lf/cleaner
+#set previewer ~/.config/lf/preview
+
+
+## dragon 
+cmd dragon $dragon  -x "$fx"
+#cmd dragon-out %dragon-drop -a -x "$fx"
+#cmd dragon-multiple %dragon-drop -a $fx
+#cmd dragon-copy %dragoncopy
+#cmd dragon-in %dragonmove
+#map do dragon-out
+#map dM dragon-multiple
+#map dc dragon-copy
+#map di dragon-in
+
+
+map w $$SHELL
+&ctpv -s $id
+&ctpvquit $id
+set cursorpreviewfmt "\033[7m"
+## Testing 
+
+#cmd wq ${{
+  #tmp="/tmp/LF_LAST_DIR_PATH"
+  #echo "$PWD" > $tmp
+  #lf -remote "send $id quit"
+#}}
+#map w wq
+
+
+### Checking select file permission
+#cmd on-select &{{
+#    lf -remote "send $id set statfmt \"$(eza -ld --color=always "$f")\""
+#}}
+
+## Using incfilter to select and open files 2023-08-25
+set incfilter
+map <c-g> :filter; set user_filter true
+
+cmap <c-e> &{{
+    # select and open file
+    if [ "$lf_user_filter" = true ]; then
+        lf -remote "send $id :cmd-enter; set user_filter false; setfilter; open"
+    else
+        lf -remote "send $id cmd-enter"
+    fi
+}}
+
+cmap <c-e> &{{
+    # exit filter mode
+    if [ "$lf_user_filter" = true ]; then
+        lf -remote "send $id :cmd-escape; set user_filter false"
+    else
+        lf -remote "send $id cmd-escape"
+    fi
+}}
+
+cmap <c-n> &{{
+    # go to next file
+    if [ "$lf_user_filter" = true ]; then
+        lf -remote "send $id down"
+    fi
+}}
+
+cmap <c-p> &{{
+    # go to previous file
+    if [ "$lf_user_filter" = true ]; then
+        lf -remote "send $id up"
+    fi
+}}
+
+# History jump 2023-08-25
+map J :updir; set dironly true; down; set dironly false; open
+map K :updir; set dironly true; up; set dironly false; open
+map b :set preview!
+map mj :set sortby natural;set reverse!
+map mk :set sortby ctime;set reverse!
+#map <enter> shell
+map x $$f
+map X !$f
+map m #cancell the mark function 
+map mv $qlmanage -p "$fx" >/dev/null 2>&1
+map <esc> : clear ; unselect
+map mi $qlmanage -p "$f" #using mac preview as previewer
+cmd edit_config :{{
+  # $$EDITOR ~/.config/lf/lfrc
+  $$EDITOR ~/.config/lf/lfrc
+  source ~/.config/lf/lfrc
+}}
+
+map mp edit_config
+
+# CMD auto resize 
+cmd recol ${{
+    w=$(tput cols)
+    if [ $w -le 80 ]; then
+        lf -remote "send $id set ratios 1:2"
+    elif [ $w -le 160 ]; then
+        lf -remote "send $id set ratios 1:2:3"
+    else
+        lf -remote "send $id set ratios 1:2:3:5"
+    fi
+}}
+map mr recol
+# follow link
+cmd follow_link %{{
+  lf -remote "send ${id} select '$(readlink $f)'"
+}}
+map gL follow_link
+#map w $bash -c 'tmp="$(mktemp)" && command lf -last-dir-path="$tmp" "$@" && test -f "$tmp" && dir="$(command cat "$tmp")" && rm -f "$tmp" && test -d "$dir" && cd "$dir" && exec $SHELL'
+
+
+# Yank paths into your clipboard
+cmd yank-dirname $dirname -- "$f" | head -c-1 | tr -d '\n' | pbcopy
+cmd yank-path $printf '%s' "$fx" | pbcopy
+cmd yank-basename $basename -a -- $fx | tr -d '\n' | pbcopy
+map mw :yank-path
+map mn :yank-basename
+map my :yank-withoutextension
+cmd yank-withoutextension &basename -a -- $fx | rev | cut -d. -f2- | rev | tr -d '\n' | pbcopy 
+
+
+# cmd aj %lf -remote "send $id cd '$(autojump $1)'"
+cmd z %{{
+    result="$(zoxide query --exclude "${PWD}" -- "$1")"
+    lf -remote "send ${id} cd '${result}'"
+}}
+
+cmd zi ${{
+    result="$(zoxide query -i -- "$1")"
+    lf -remote "send ${id} cd '${result}'"
+}}
+map a push :z<space>
+
+map F $$EDITOR $(fzf -m)
+
+
+cmd fzf $open $(fd | fzf -m)
+cmd sioyek $open -n -a /Applications/sioyek.app $(fd -e pdf | fzf -m)
+cmd mopdf $open  -a '/Applications/PDF Expert.app' $(fd -e pdf | fzf -m)
+map <a-F> $open $(fzf -m)
+
+cmd fzf_jump ${{
+    res="$(find . -maxdepth 4 | fzf --reverse --header='Jump to location' | sed 's/\\/\\\\/g;s/"/\\"/g')"
+    if [ -d "$res" ]; then
+        cmd="cd"
+    else 
+        cmd="select"                                                       
+    fi
+    lf -remote "send $id $cmd \"$res\""
+}}
+map <c-f> :fzf_jump
+
+
+# Ripgrep
+cmd fzf_search ${{
+    res="$( \
+        RG_PREFIX="rg --column --line-number --no-heading --color=always \
+            --smart-case "
+        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+            --ansi --layout=reverse --header 'Search in files' \
+            | cut -d':' -f1
+    )"
+    [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+}}
+map gs :fzf_search
+# zsh file picker / directory changer
+cmd zle-cd %printf 'cd %q && zle reset-prompt\n' "$PWD" >&$ZLE_FIFO
+
+cmd zle-insert-relative %{{
+    for f in $fx; do
+        printf 'LBUFFER+="${LBUFFER:+ }${(q)$(realpath %q --relative-to=$PWD)}"\n' "$f" >&$ZLE_FIFO
+    done
+}}
+
+cmd zle-insert-absolute %{{
+    for f in $fx; do
+        printf 'LBUFFER+="${LBUFFER:+ }%q"\n' "$f" >&$ZLE_FIFO
+    done
+}}
+
+cmd zle-init :{{
+    map . zle-cd
+    map a zle-insert-relative
+    map A zle-insert-absolute
+}}
+
+&[[ -n "$ZLE_FIFO" ]] && lf -remote "send $id zle-init"
+
+
+cmd newfold ${{
+    set -f
+    read newd
+    mkdir -- "$newd"
+    mv -- $fx "$newd"
+}}
+
+# New folder with selected items
+map <c-n> newfold
+
+
+cmd open &{{
+    case $(file --mime-type -Lb $fx) in
+        text/*) lf -remote "send $id \$$EDITOR \$fx";;
+        video/*) mpv --quiet $fx &;;
+        application/pdf) sioyek --new-window $fx > /dev/null &;;
+        # audio/mp3) mpv --player-operation-mode=pseudo-gui  $fx &;; 
+        audio/*) mpv --player-operation-mode=pseudo-gui $fx &;; 
+        # mpv --vo=null --video=no --no-video --term-osd-bar --no-resume-playback --shuffle
+        ##  > /dev/null mean dicard any output that you don't want 
+        application/epub) sioyek --new-window $fx > /dev/null &;;
+        *) open $fx &;;
+    esac
+}}
+ #  case $(file --mime-type $f -b) in 
+ #               text/*) case $f in 
+ #                     *txt) nvim $fx;;
+ #               video/*) open -a mpv $f &;;
+ #               application/pdf) sioyek $f &;;
+ #               *) open $f &;;
+ #   esac
+ # }}
+map o open $fx# cmd open
+map O &open $fx # folder 
+#map O &open -R $fx # folder 
+cmd finder &open -R $fx # folder 
+
+cmd trash %trash $fx
+map T push :trash<enter>
+
+cmd extract ${{
+    set -f
+    case $f in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
+        *.tar.gz|*.tgz) tar xzvf $f;;
+        *.tar.xz|*.txz) tar xJvf $f;;
+        *.zip) 7zz x $f;;
+        *.rar) 7zz x $f;;
+        *.7z) 7zz x $f;;
+    esac
+}}
+
+# Bulk rename multiple files 
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    if [ -n "$fs" ]; then
+        fs="$(basename $fs)"
+    else
+        fs="$(ls)"
+    fi
+    printf '%s\n' "$fs" >"$old"
+    printf '%s\n' "$fs" >"$new"
+    $EDITOR "$new"
+    [ "$(wc -l < "$new")" -ne "$(wc -l < "$old")" ] && exit
+    paste "$old" "$new" | while IFS= read -r names; do
+        src="$(printf '%s' "$names" | cut -f1)"
+        dst="$(printf '%s' "$names" | cut -f2)"
+        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+            continue
+        fi
+        mv -- "$src" "$dst"
+    done
+    rm -- "$old" "$new"
+    lf -remote "send $id unselect"
+}}
+cmd bookmark_jump ${{
+    LF_BOOKMARK_PATH=~/.config/lf/bookmark
+    res="$(cat $LF_BOOKMARK_PATH/$(ls $LF_BOOKMARK_PATH | fzf))"
+    lf -remote "send $id cd \"$res\""
+}}
+
+cmd bookmark_create ${{
+    LF_BOOKMARK_PATH=~/.config/lf/bookmark
+    read ans
+    echo $PWD > $LF_BOOKMARK_PATH/$ans
+}}
+
+cmd select-files &{{
+    get_files() {
+        if [ "$lf_hidden" = 'false' ]; then
+            find "$PWD" -mindepth 1 -maxdepth 1 -type f -not -name '.*' -print0
+        else
+            find "$PWD" -mindepth 1 -maxdepth 1 -type f -print0
+        fi |
+        xargs -0 printf ' %q'
+    }
+
+    lf -remote "send $id :unselect; toggle $(get_files)"
+}}
+
+cmd select-dirs &{{
+    get_dirs() {
+        if [ "$lf_hidden" = 'false' ]; then
+            gfind "$PWD" -mindepth 1 -maxdepth 1 -type d -not -name '.*' -print0
+        else
+            gfind "$PWD" -mindepth 1 -maxdepth 1 -type d -print0
+        fi |
+        xargs -0 printf ' %q'
+    }
+
+    lf -remote "send $id :unselect; toggle $(get_dirs)"
+}}
+
+map ma bookmark_jump
+map mc bookmark_create 
+map <a-m> bulk-rename
+map <a-g> bookmark_jump
+map mo sioyek
+cmd pdf4A4L $~/.config/script/pdfnupA4L.sh
+cmd pdf4A4 $~/.config/script/pdfnupA4.sh
+cmd mp $~/.config/script/mp.sh
+cmd ebooks2hk $~/.config/script/convertchinese.sh
+# cmd vtt2txt python3 
+map <c-o> pdf4A4
+cmd flactomp3 $~/.config/script/flactomp3.sh
+cmd epubtopdf $~/.config/script/ebook_to_pdf.sh
+cmd azw3toepub $~/.config/script/azw3toepub.sh
+cmd s2hk $~/.config/script/translates2hk
+cmd mds2hk $~/.config/script/mds2hk.sh 
+cmd tg $~/.config/script/mytg.sh
+cmd rfv $~/.config/script/rfv
+cmd folder $~/.config/script/folder.sh
+cmd etoc $~/.config/script/extract_epub_toc.sh
+cmd linkmd $~/.config/script/linkmd.sh
+map gS :rfv
+
+# cmd space $ls |grep "pdf"| grep " " | while read -r f; do mv "$f" `echo $f | tr ' ' '_'`; done
+map C push r<c-u> # new rename
+map I push r<c-a> # at the very beginning
+map i push r<a-b><a-b><a-f> # before extension
+
+# Movement
+source "~/.config/lf/shortcutrc"

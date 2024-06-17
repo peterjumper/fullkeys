@@ -1,0 +1,11 @@
+map gD cd ~/Documents/Torrent
+map gd cd ~/Downloads
+map gc cd ~/.config
+map gr cd ~/Desktop/
+map gn cd ~/Documents/ZoomMD
+map g1 cd ~/Documents/City\ 05\ Sem4
+map g2 cd ~/Documents/my\ recording
+map g3 cd ~/Documents/vaults/personal
+map g8 cd "~/Documents/1.Business Analysis 2022-03-20/Golden booklists with solutions 2022-04-08/Golden mission"
+map gi cd ~/aria2/Downloads
+

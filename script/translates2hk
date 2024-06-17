@@ -1,0 +1,37 @@
+# for changing directory as well
+# find . -type d -depth 1 -exec sh -c '
+#     for dir do
+#         # Get parent directory and directory name
+#         parent_dir="$(dirname "$dir")"
+#         dirname="$(basename "$dir")"
+#         # Convert directory name to traditional Chinese and rename directory
+#         newname="$(echo "$dirname" | opencc -c s2hk.json)"
+#         mv "$dir" "$parent_dir/$newname"
+#     done
+# ' sh {} +
+
+# find . -type f -exec sh -c 'newname=$(echo "$1" | opencc -c s2hk.json); mv "$1" "$newname"' sh {} \;
+
+
+# /* Here's a command that will remove all spaces from the filenames of all files in the current directory: */
+
+# /* for file in *; do mv "$file" "${file// /}"; done */
+
+
+# /* Here's how the command works: */
+
+# /* 1. for file in *: This loop iterates over all files in the current directory. */
+# /* 2. do: This keyword indicates the beginning of the loop body. */
+# /* 3. mv "$file" "${file// /}": This command renames the current file by removing all spaces from its name. The ${file// /} syntax is a parameter expansion that replaces all occurrences of a space character with nothing. The result is used as the new file name. */
+# /* 4. done: This keyword indicates the end of the loop body. */
+# /* Note that this command will only remove spaces from the filenames of files in the current directory. If you want to remove spaces from the filenames of files in subdirectories as well, you can use the find command: */
+# /* find . -depth -name '* *' -execdir bash -c 'mv "$1" "${1// /}"' bash {} \; */
+
+# # Note that this command will only remove spaces from the filenames of files in the current directory. If you want to remove spaces from the filenames of files in subdirectories as well, you can use the find command:
+
+# # find . -depth -name '* *' -execdir bash -c 'mv "$1" "${1// /}"' bash {} \;
+
+#!/bin/bash
+
+# Find directories and files using fd and convert names
+fd . -d 5 -x bash -c 'path="$0"; parent_dir="$(dirname "$path")"; name="$(basename "$path")"; newname="$(opencc -c s2hk.json <<< "$name")"; if [[ "$newname" != "$name" ]]; then mv "$path" "$parent_dir/$newname"; echo "Renamed: $name -> $newname"; fi' {}
