@@ -238,9 +238,6 @@ Number keys <kbd>1</kbd>, <kbd>2</kbd>, …, <kbd>9</kbd>, <kbd>0</kbd> are used
 
 ### Control Planes
 
-<details>
-<summary>control planes</summary>
-
 | Plane | Modifiers | Plane | Modifiers | Plane | Modifiers |
 | :---: | :-------: | :---: | :-------: | :---: | :-------: |
 | **0** |     <kbd>✱</kbd>     |   3   |    <kbd>✱</kbd><kbd>⌘</kbd><kbd>⌥</kbd>    |   7   |   <kbd>✱</kbd><kbd>⌘</kbd><kbd>⌥</kbd><kbd>⌃</kbd>    |
