@@ -285,6 +285,15 @@ To start integrating the FullKeys workflow into your daily routine, begin by ins
 
 Our setup scripts and configuration files are available to help you jumpstart your journey towards a more efficient, keyboard-driven workflow. Explore the different directories in this repository to find setups tailored to various development environments.
 
+## Yabai (Window tilling management)
+- options key as main control key
+
+## MPV (Vidow player )
+
+- youtube-like shortcut
+- fzf pickup Fuction
+- ui
+
 ## Contribution
 
 We welcome contributions! If you have suggestions, configurations, or tools that fit the FullKeys philosophy, please feel free to submit a pull request or open an issue.
