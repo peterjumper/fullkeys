@@ -288,6 +288,14 @@ Our setup scripts and configuration files are available to help you jumpstart yo
 ## Yabai (Window tilling management)
 - options key as main control key
 
+## Nvim 
+lua script 
+Obsidian.nvm 
+- better than Neoorg
+- Blazzly fast 
+- Fune integrating with wiki and markdown links 
+- Become my daily drive on note taking
+
 ## MPV (Vidow player )
 
 - youtube-like shortcut
