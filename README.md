@@ -1,5 +1,8 @@
 "FullKeys" emphasizing efficiency in using keystrokes over mouse or menu-driven commands. This README introduces the project, lists the tools used, and gives a brief overview of each.
+
 ![image-20240617194734562](./assets/image-20240617194734562.png)
+
+![Kapture 2024-07-13 at 19.33.02](/Users/peterhk/Desktop/Full-keyboard-environment/assets/Kapture 2024-07-13 at 19.33.02.gif)
 
 ---
 
