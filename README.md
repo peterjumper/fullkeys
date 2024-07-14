@@ -2,7 +2,7 @@
 
 ![image-20240617194734562](./assets/image-20240617194734562.png)
 
-![Kapture 2024-07-13 at 19.33.02]()
+![Kapture 2024-07-13 at 19.33.02](https://github.com/peterjumper/fullkeys/blob/main/assets/Kapture%202024-07-13%20at%2020.08.15.gif)
 ---
 
 # FullKeys
