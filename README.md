@@ -4,7 +4,8 @@
 
 
 # Gif :
-![Gif showcase](https://github.com/peterjumper/fullkeys/blob/main/assets/file.gif)
+![Gif showcase](./assets/file.gif)
+![Gif showcase](https://gifyu.com/image/St0kO)
 ---
 
 # FullKeys
